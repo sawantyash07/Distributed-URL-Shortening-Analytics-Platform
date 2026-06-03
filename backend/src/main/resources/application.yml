@@ -2,7 +2,7 @@ spring:
   application:
     name: url-shortener
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/urlshortener}
+    url: ${JDBC_DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/urlshortener}}
     username: ${SPRING_DATASOURCE_USERNAME:urlshortener}
     password: ${SPRING_DATASOURCE_PASSWORD:urlshortener}
     hikari:
