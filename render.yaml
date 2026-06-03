@@ -1,0 +1,62 @@
+databases:
+  - name: url-shortener-postgres
+    databaseName: urlshortener
+    user: urlshortener
+    plan: free
+
+services:
+  - type: redis
+    name: url-shortener-redis
+    ipAllowList: []
+    plan: free
+
+  - type: web
+    name: url-shortener-api
+    env: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: url-shortener-postgres
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: url-shortener-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: url-shortener-postgres
+          property: password
+      - key: REDIS_HOST
+        fromService:
+          name: url-shortener-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: url-shortener-redis
+          type: redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromService:
+          name: url-shortener-redis
+          type: redis
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://url-shortener-web.onrender.com
+      - key: SHORT_BASE_URL
+        value: https://url-shortener-api.onrender.com/r
+
+  - type: web
+    name: url-shortener-web
+    env: docker
+    rootDir: frontend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://url-shortener-api.onrender.com

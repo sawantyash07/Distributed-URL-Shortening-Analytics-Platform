@@ -1,0 +1,39 @@
+:root {
+  color: #182026;
+  background:
+    radial-gradient(circle at top left, rgba(94, 234, 212, 0.35), transparent 34%),
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.15), transparent 22%),
+    linear-gradient(180deg, #eef7f4 0%, #f6f6ef 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+.metric-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::after {
+  content: '';
+  position: absolute;
+  inset: auto -12% -45% 55%;
+  height: 140px;
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.22), transparent 68%);
+  pointer-events: none;
+}

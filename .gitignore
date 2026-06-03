@@ -1,0 +1,17 @@
+.DS_Store
+.idea/
+.vscode/
+*.iml
+*.log
+*.tmp
+*.swp
+*.env
+*.env.local
+
+backend/.gradle/
+backend/build/
+
+frontend/node_modules/
+frontend/dist/
+
+coverage/
