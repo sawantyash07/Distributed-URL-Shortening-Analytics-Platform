@@ -18,7 +18,7 @@ services:
     plan: free
 
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: JDBC_DATABASE_URL
         fromDatabase:
           name: url-shortener-postgres
           property: connectionString
