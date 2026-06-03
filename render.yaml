@@ -38,14 +38,14 @@ services:
 
   * key: REDIS_HOST
     fromService:
-    name: url-shortener-redis
     type: redis
+    name: url-shortener-redis
     property: host
 
   * key: REDIS_PORT
     fromService:
-    name: url-shortener-redis
     type: redis
+    name: url-shortener-redis
     property: port
 
   * key: JWT_SECRET
