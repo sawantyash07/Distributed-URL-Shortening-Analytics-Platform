@@ -45,12 +45,6 @@ services:
           name: url-shortener-redis
           property: port
 
-      - key: REDIS_PASSWORD
-        fromService:
-          type: redis
-          name: url-shortener-redis
-          property: password
-
       - key: JWT_SECRET
         generateValue: true
 
