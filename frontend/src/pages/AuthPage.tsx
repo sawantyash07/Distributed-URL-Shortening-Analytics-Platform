@@ -25,6 +25,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState<Mode>('login')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -37,17 +38,39 @@ export default function AuthPage() {
     event.preventDefault()
     setLoading(true)
     setError(null)
+    setSuccess(null)
 
     try {
-      const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register'
-      const payload = mode === 'login'
-        ? { email: form.email, password: form.password }
-        : { fullName: form.fullName, email: form.email, password: form.password }
-      const { data } = await api.post<AuthResponse>(endpoint, payload)
-      login(data)
-      navigate('/', { replace: true })
+      if (mode === 'login') {
+        const { data } = await api.post<AuthResponse>('/api/auth/login', {
+          email: form.email,
+          password: form.password,
+        })
+        login(data)
+        navigate('/', { replace: true })
+      } else {
+        await api.post<AuthResponse>('/api/auth/register', {
+          fullName: form.fullName,
+          email: form.email,
+          password: form.password,
+        })
+        setMode('login')
+        setForm((current) => ({ ...current, fullName: '', password: '' }))
+        setSuccess('Registration successful. Please log in to access the dashboard.')
+      }
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? 'Unable to authenticate. Please try again.')
+      const status = err?.response?.status
+      const message = err?.response?.data?.message
+
+      if (mode === 'register' && status === 409) {
+        setMode('login')
+        setError(null)
+        setSuccess('An account with this email already exists. Please log in with your existing password.')
+      } else if (mode === 'login' && status === 401) {
+        setError('Invalid email or password. If this is a new account, register first, then log in with the same password.')
+      } else {
+        setError(message ?? 'Unable to authenticate. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
@@ -94,11 +117,20 @@ export default function AuthPage() {
                 </Typography>
               </Box>
 
-              <Tabs value={mode} onChange={(_, value) => setMode(value)} variant="fullWidth">
+              <Tabs
+                value={mode}
+                onChange={(_, value) => {
+                  setMode(value)
+                  setError(null)
+                  setSuccess(null)
+                }}
+                variant="fullWidth"
+              >
                 <Tab value="login" label="Login" />
                 <Tab value="register" label="Register" />
               </Tabs>
 
+              {success && <Alert severity="success">{success}</Alert>}
               {error && <Alert severity="error">{error}</Alert>}
 
               <Box component="form" onSubmit={handleSubmit}>

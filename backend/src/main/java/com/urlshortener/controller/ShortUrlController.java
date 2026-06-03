@@ -10,6 +10,7 @@ import com.urlshortener.security.UserPrincipal;
 import com.urlshortener.service.AnalyticsService;
 import com.urlshortener.service.CurrentUserService;
 import com.urlshortener.service.ShortUrlService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,6 +56,7 @@ public class ShortUrlController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) String search,
+        @Parameter(description = "Lifecycle filter: ALL, ACTIVE, INACTIVE, EXPIRED")
         @RequestParam(defaultValue = "ALL") String status,
         @RequestParam(defaultValue = "createdAt") String sortBy,
         @RequestParam(defaultValue = "DESC") String direction
@@ -81,6 +84,18 @@ public class ShortUrlController {
     @Operation(summary = "Deactivate an owned URL")
     public void delete(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
         shortUrlService.deactivateOwnedUrl(currentUserService.requireUser(principal), id);
+    }
+
+    @PatchMapping("/{id}/activate")
+    @Operation(summary = "Activate an owned URL")
+    public ShortUrlResponse activate(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        return shortUrlService.activateOwnedUrl(currentUserService.requireUser(principal), id);
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    @Operation(summary = "Deactivate an owned URL")
+    public ShortUrlResponse deactivate(@AuthenticationPrincipal UserPrincipal principal, @PathVariable UUID id) {
+        return shortUrlService.deactivateOwnedUrlAndReturn(currentUserService.requireUser(principal), id);
     }
 
     @GetMapping("/{id}/analytics")

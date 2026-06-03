@@ -21,6 +21,7 @@ export interface ShortUrl {
   title: string | null
   qrCodeDataUrl: string
   customAlias: boolean
+  status: 'ACTIVE' | 'INACTIVE' | 'EXPIRED'
   active: boolean
   clickCount: number
   expiresAt: string | null
@@ -61,6 +62,7 @@ export interface UrlAnalytics {
 export interface DashboardSummary {
   totalUrls: number
   activeUrls: number
+  inactiveUrls: number
   expiredUrls: number
   totalClicks: number
   clickTrend: DailyClickPoint[]

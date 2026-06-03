@@ -16,6 +16,7 @@ public class ShortUrlMapper {
 
     public ShortUrlResponse toResponse(ShortUrl shortUrl) {
         String shortUrlValue = appProperties.getShortBaseUrl() + "/" + shortUrl.getShortCode();
+        String status = shortUrl.getStatus() == null ? "ACTIVE" : shortUrl.getStatus().name();
         return ShortUrlResponse.builder()
             .id(shortUrl.getId())
             .shortCode(shortUrl.getShortCode())
@@ -24,6 +25,7 @@ public class ShortUrlMapper {
             .title(shortUrl.getTitle())
             .qrCodeDataUrl(qrCodeGenerator.generateDataUrl(shortUrlValue))
             .customAlias(shortUrl.isCustomAlias())
+            .status(status)
             .active(shortUrl.isActive())
             .clickCount(shortUrl.getClickCount())
             .expiresAt(shortUrl.getExpiresAt())

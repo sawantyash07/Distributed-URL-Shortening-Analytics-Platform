@@ -1,0 +1,11 @@
+ALTER TABLE app_user
+    ALTER COLUMN role DROP DEFAULT;
+
+ALTER TABLE app_user
+    ALTER COLUMN role TYPE VARCHAR(20)
+    USING role::text;
+
+DROP TYPE IF EXISTS user_role;
+
+ALTER TABLE app_user
+    ALTER COLUMN role SET DEFAULT 'USER';

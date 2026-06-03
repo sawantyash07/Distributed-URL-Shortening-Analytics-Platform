@@ -5,6 +5,7 @@ import com.urlshortener.dto.auth.AuthResponse;
 import com.urlshortener.dto.auth.LoginRequest;
 import com.urlshortener.dto.auth.RegisterRequest;
 import com.urlshortener.exception.ConflictException;
+import com.urlshortener.exception.UnauthorizedOperationException;
 import com.urlshortener.model.AppUser;
 import com.urlshortener.model.Role;
 import com.urlshortener.repository.AppUserRepository;
@@ -12,8 +13,6 @@ import com.urlshortener.security.JwtService;
 import com.urlshortener.security.UserPrincipal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,6 @@ public class AuthService {
 
     private final AppProperties appProperties;
     private final AppUserRepository appUserRepository;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserMapper userMapper;
@@ -49,10 +47,9 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        UserPrincipal principal = (UserPrincipal) authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.email(), request.password())
-        ).getPrincipal();
-        AppUser user = appUserRepository.findByEmailIgnoreCase(principal.getUsername()).orElseThrow();
+        AppUser user = appUserRepository.authenticate(request.email().trim().toLowerCase(), request.password())
+            .orElseThrow(() -> new UnauthorizedOperationException("Invalid email or password"));
+        UserPrincipal principal = new UserPrincipal(user);
         return buildAuthResponse(principal, user);
     }
 

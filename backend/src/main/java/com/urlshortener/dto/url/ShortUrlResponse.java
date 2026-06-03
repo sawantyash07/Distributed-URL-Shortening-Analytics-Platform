@@ -13,6 +13,7 @@ public record ShortUrlResponse(
     String title,
     String qrCodeDataUrl,
     boolean customAlias,
+    String status,
     boolean active,
     long clickCount,
     OffsetDateTime expiresAt,

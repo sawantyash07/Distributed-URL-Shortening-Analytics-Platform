@@ -6,6 +6,7 @@ public record CachedShortUrl(
     String shortCode,
     String originalUrl,
     OffsetDateTime expiresAt,
+    String status,
     boolean active
 ) {
 }

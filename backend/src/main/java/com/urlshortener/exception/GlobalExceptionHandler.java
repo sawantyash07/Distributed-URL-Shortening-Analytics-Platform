@@ -40,6 +40,11 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request, Map.of());
     }
 
+    @ExceptionHandler(UrlGoneException.class)
+    public ResponseEntity<ApiErrorResponse> handleGone(UrlGoneException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.GONE, ex.getMessage(), request, Map.of());
+    }
+
     @ExceptionHandler({UnauthorizedOperationException.class, AuthenticationException.class, BadCredentialsException.class})
     public ResponseEntity<ApiErrorResponse> handleUnauthorized(Exception ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request, Map.of());

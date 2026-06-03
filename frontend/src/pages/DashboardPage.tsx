@@ -35,6 +35,7 @@ import {
 } from '@mui/material'
 import AddLinkIcon from '@mui/icons-material/AddLink'
 import AnalyticsIcon from '@mui/icons-material/Analytics'
+import AutorenewIcon from '@mui/icons-material/Autorenew'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import LinkOffIcon from '@mui/icons-material/LinkOff'
@@ -68,6 +69,7 @@ type CreateMode = 'single' | 'bulk'
 const metricMeta = [
   { key: 'totalUrls', label: 'Total URLs', tone: '#0F766E' },
   { key: 'activeUrls', label: 'Active URLs', tone: '#2563EB' },
+  { key: 'inactiveUrls', label: 'Inactive URLs', tone: '#D97706' },
   { key: 'expiredUrls', label: 'Expired URLs', tone: '#B45309' },
   { key: 'totalClicks', label: 'Total Clicks', tone: '#7C3AED' },
 ] as const
@@ -166,7 +168,12 @@ export default function DashboardPage() {
   }
 
   async function handleDeactivate(id: string) {
-    await api.delete(`/api/urls/${id}`)
+    await api.patch(`/api/urls/${id}/deactivate`)
+    await refreshAll()
+  }
+
+  async function handleActivate(id: string) {
+    await api.patch(`/api/urls/${id}/activate`)
     await refreshAll()
   }
 
@@ -428,9 +435,9 @@ export default function DashboardPage() {
                       </TableCell>
                       <TableCell>
                         <Chip
-                          label={url.active ? 'Active' : 'Inactive'}
-                          color={url.active ? 'success' : 'default'}
-                          variant={url.active ? 'filled' : 'outlined'}
+                          label={url.status}
+                          color={url.status === 'ACTIVE' ? 'success' : url.status === 'INACTIVE' ? 'warning' : 'error'}
+                          variant={url.status === 'ACTIVE' ? 'filled' : 'outlined'}
                         />
                       </TableCell>
                       <TableCell>{url.clickCount.toLocaleString()}</TableCell>
@@ -449,9 +456,15 @@ export default function DashboardPage() {
                           <IconButton onClick={() => openEdit(url)}>
                             <TuneIcon />
                           </IconButton>
-                          <IconButton onClick={() => handleDeactivate(url.id)}>
-                            <LinkOffIcon />
-                          </IconButton>
+                          {url.status === 'ACTIVE' ? (
+                            <IconButton onClick={() => handleDeactivate(url.id)}>
+                              <LinkOffIcon />
+                            </IconButton>
+                          ) : url.status === 'INACTIVE' ? (
+                            <IconButton onClick={() => handleActivate(url.id)}>
+                              <AutorenewIcon />
+                            </IconButton>
+                          ) : null}
                         </Stack>
                       </TableCell>
                     </TableRow>

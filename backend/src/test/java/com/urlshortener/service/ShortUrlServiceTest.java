@@ -12,6 +12,7 @@ import com.urlshortener.exception.ConflictException;
 import com.urlshortener.model.AppUser;
 import com.urlshortener.model.Role;
 import com.urlshortener.model.ShortUrl;
+import com.urlshortener.model.UrlStatus;
 import com.urlshortener.repository.ShortCodeSequenceRepository;
 import com.urlshortener.repository.ShortUrlRepository;
 import java.time.OffsetDateTime;
@@ -60,6 +61,7 @@ class ShortUrlServiceTest {
 
         assertThat(response.shortCode()).isEqualTo("Q0u");
         assertThat(response.originalUrl()).isEqualTo("https://example.com/docs");
+        assertThat(response.status()).isEqualTo("ACTIVE");
     }
 
     @Test
@@ -67,10 +69,45 @@ class ShortUrlServiceTest {
         AppUser user = AppUser.builder().id(UUID.randomUUID()).email("user@example.com").fullName("User").role(Role.USER).active(true).build();
         CreateShortUrlRequest request = new CreateShortUrlRequest("Docs", "https://example.com/docs", "myAlias", OffsetDateTime.now().plusDays(1));
 
-        when(shortUrlRepository.existsByShortCodeIgnoreCase("myAlias")).thenReturn(true);
+        when(shortUrlRepository.existsByShortCodeIgnoreCase("myalias")).thenReturn(true);
 
         assertThatThrownBy(() -> shortUrlService.createShortUrl(user, request))
             .isInstanceOf(ConflictException.class)
             .hasMessageContaining("already in use");
+    }
+
+    @Test
+    void shouldNormalizeCustomAliasToLowerCase() {
+        AppUser user = AppUser.builder().id(UUID.randomUUID()).email("user@example.com").fullName("User").role(Role.USER).active(true).build();
+        CreateShortUrlRequest request = new CreateShortUrlRequest("Docs", "https://example.com/docs", "MyAlias", OffsetDateTime.now().plusDays(1));
+
+        when(shortUrlRepository.existsByShortCodeIgnoreCase("myalias")).thenReturn(false);
+        when(shortUrlRepository.save(any(ShortUrl.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var response = shortUrlService.createShortUrl(user, request);
+
+        assertThat(response.shortCode()).isEqualTo("myalias");
+    }
+
+    @Test
+    void shouldResolveExpiredStatusFromCachePayload() {
+        var status = shortUrlService.resolveStatus(new com.urlshortener.dto.url.CachedShortUrl(
+            "abc123",
+            "https://example.com",
+            OffsetDateTime.now().minusMinutes(5),
+            "ACTIVE",
+            true
+        ));
+
+        assertThat(status).isEqualTo(UrlStatus.EXPIRED);
+    }
+
+    @Test
+    void shouldMarkExpiredUrlsThroughRepository() {
+        when(shortUrlRepository.markExpiredUrls(UrlStatus.EXPIRED)).thenReturn(3);
+
+        int updated = shortUrlService.markExpiredUrls();
+
+        assertThat(updated).isEqualTo(3);
     }
 }

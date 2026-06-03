@@ -7,6 +7,7 @@ import lombok.Builder;
 public record DashboardSummaryResponse(
     long totalUrls,
     long activeUrls,
+    long inactiveUrls,
     long expiredUrls,
     long totalClicks,
     List<DailyClickPoint> clickTrend,

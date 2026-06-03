@@ -49,6 +49,7 @@ public class AnalyticsService {
         return DashboardSummaryResponse.builder()
             .totalUrls(shortUrlRepository.countByOwnerId(user.getId()))
             .activeUrls(shortUrlRepository.countActiveByOwnerId(user.getId()))
+            .inactiveUrls(shortUrlRepository.countInactiveByOwnerId(user.getId()))
             .expiredUrls(shortUrlRepository.countExpiredByOwnerId(user.getId()))
             .totalClicks(shortUrlRepository.totalClicksByOwnerId(user.getId()))
             .clickTrend(clickEventRepository.findOwnerDailyClicks(user.getId()).stream()

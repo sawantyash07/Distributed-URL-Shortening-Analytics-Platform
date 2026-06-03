@@ -2,6 +2,8 @@ package com.urlshortener.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -45,6 +47,10 @@ public class ShortUrl extends BaseEntity {
 
     @Column(name = "expires_at")
     private OffsetDateTime expiresAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UrlStatus status;
 
     @Column(name = "click_count", nullable = false)
     private long clickCount;
