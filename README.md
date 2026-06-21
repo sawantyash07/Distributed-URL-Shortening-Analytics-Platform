@@ -172,9 +172,9 @@ erDiagram
 
 Examples are available in:
 
-- [./.env.example](D:/System%20Design%20Project/URL%20Shortener%20System/.env.example)
-- [./backend/.env.example](D:/System%20Design%20Project/URL%20Shortener%20System/backend/.env.example)
-- [./frontend/.env.example](D:/System%20Design%20Project/URL%20Shortener%20System/frontend/.env.example)
+- [./.env.example](./.env.example)
+- [./backend/.env.example](./backend/.env.example)
+- [./frontend/.env.example](./frontend/.env.example)
 
 Important runtime variables:
 
@@ -207,7 +207,7 @@ The easiest way to run the entire project is with Docker Compose.
 From PowerShell:
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System"
+cd "url-shortener"
 ```
 
 ### 2. Start the full stack
@@ -262,7 +262,7 @@ docker-compose up -d postgres redis
 Open a terminal:
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\backend"
+cd "backend"
 ./gradlew bootRun
 ```
 
@@ -271,7 +271,7 @@ cd "D:\System Design Project\URL Shortener System\backend"
 Open a second terminal:
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\frontend"
+cd "frontend"
 npm install
 npm run dev
 ```
@@ -348,34 +348,34 @@ docker compose logs -f redis
 ## Backend Commands
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\backend"
+cd "backend"
 .\gradlew.bat test
 ```
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\backend"
+cd "backend"
 .\gradlew.bat bootRun
 ```
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\backend"
+cd "backend"
 .\gradlew.bat clean build
 ```
 
 ## Frontend Commands
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\frontend"
+cd "frontend"
 npm install
 ```
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\frontend"
+cd "frontend"
 npm run dev
 ```
 
 ```powershell
-cd "D:\System Design Project\URL Shortener System\frontend"
+cd "frontend"
 npm run build
 ```
 
@@ -657,7 +657,7 @@ docker compose up -d --build
 
 ### Render
 
-The repo contains [render.yaml](D:/System%20Design%20Project/URL%20Shortener%20System/render.yaml) for Blueprint deployment.
+The repo contains [render.yaml](./render.yaml) for Blueprint deployment.
 
 It provisions:
 
