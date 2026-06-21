@@ -32,6 +32,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  Link,
 } from '@mui/material'
 import AddLinkIcon from '@mui/icons-material/AddLink'
 import AnalyticsIcon from '@mui/icons-material/Analytics'
@@ -39,6 +40,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import LinkOffIcon from '@mui/icons-material/LinkOff'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import QrCode2Icon from '@mui/icons-material/QrCode2'
 import SearchIcon from '@mui/icons-material/Search'
 import TuneIcon from '@mui/icons-material/Tune'
@@ -423,15 +425,18 @@ export default function DashboardPage() {
                       <TableCell>
                         <Stack spacing={0.5}>
                           <Typography fontWeight={700}>{url.shortCode}</Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {url.shortUrl}
-                          </Typography>
+                          <Link href={url.shortUrl} target="_blank" rel="noopener noreferrer" variant="body2" underline="hover" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            {url.shortUrl} <OpenInNewIcon fontSize="inherit" />
+                          </Link>
                         </Stack>
                       </TableCell>
                       <TableCell sx={{ maxWidth: 320 }}>
-                        <Typography noWrap title={url.originalUrl}>
-                          {url.originalUrl}
-                        </Typography>
+                        <Link href={url.originalUrl} target="_blank" rel="noopener noreferrer" variant="body2" underline="hover" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Typography noWrap title={url.originalUrl} sx={{ display: 'inline-block', maxWidth: '90%' }}>
+                            {url.originalUrl}
+                          </Typography>
+                          <OpenInNewIcon fontSize="inherit" />
+                        </Link>
                       </TableCell>
                       <TableCell>
                         <Chip

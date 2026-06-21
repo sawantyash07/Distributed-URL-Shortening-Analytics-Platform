@@ -1,0 +1,25 @@
+PS D:\System Design Project\URL Shortener System> docker-compose up -d postgres redis
+[+] up 2/2
+ ✔ Container url-shortener-redis    Running                                                        0.0s
+ ✔ Container url-shortener-postgres Running                                                        0.0s
+PS D:\System Design Project\URL Shortener System> 
+
+PS D:\System Design Project\URL Shortener System\backend> ./gradlew bootRun
+
+PS D:\System Design Project\URL Shortener System\frontend> npm run dev
+
+> frontend@1.0.0 dev
+> vite
+
+
+  VITE v7.3.5  ready in 263 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+7:01:41 pm [vite] (client) hmr update /src/pages/DashboardPage.tsx
+7:01:49 pm [vite] (client) ✨ new dependencies optimized: @mui/icons-material/OpenInNew
+7:01:49 pm [vite] (client) ✨ optimized dependencies changed. reloading
+
+
+

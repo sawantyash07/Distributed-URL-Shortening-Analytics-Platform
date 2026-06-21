@@ -47,7 +47,8 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        AppUser user = appUserRepository.authenticate(request.email().trim().toLowerCase(), request.password())
+        AppUser user = appUserRepository.findByEmailIgnoreCase(request.email().trim())
+            .filter(u -> passwordEncoder.matches(request.password(), u.getPasswordHash()))
             .orElseThrow(() -> new UnauthorizedOperationException("Invalid email or password"));
         UserPrincipal principal = new UserPrincipal(user);
         return buildAuthResponse(principal, user);
