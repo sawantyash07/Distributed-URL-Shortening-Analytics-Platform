@@ -247,31 +247,26 @@ These credentials are for local PostgreSQL and Redis when using Docker Compose:
 - Redis host: `localhost`
 - Redis port: `6379`
 
-## Run Without Docker
+## Run Locally for Development (Hybrid Mode)
 
-If you want to run services manually:
+If you want to run the databases in Docker but run the backend and frontend locally for development:
 
 ### 1. Start PostgreSQL and Redis
 
-Make sure PostgreSQL is available on:
+```powershell
+docker-compose up -d postgres redis
+```
 
-- `localhost:5432`
-- database `urlshortener`
-- user `urlshortener`
-- password `urlshortener`
+### 2. Run the backend locally
 
-Make sure Redis is available on:
-
-- `localhost:6379`
-
-### 2. Run the backend
+Open a terminal:
 
 ```powershell
 cd "D:\System Design Project\URL Shortener System\backend"
-.\gradlew.bat bootRun
+./gradlew bootRun
 ```
 
-### 3. Run the frontend
+### 3. Run the frontend locally
 
 Open a second terminal:
 
