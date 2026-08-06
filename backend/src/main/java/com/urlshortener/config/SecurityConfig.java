@@ -58,6 +58,9 @@ public class SecurityConfig {
             allowedOrigins.add(appProperties.getFrontendUrl());
         }
         allowedOrigins.forEach(configuration::addAllowedOrigin);
+        configuration.addAllowedOriginPattern("http://192.168.*.*:*");
+        configuration.addAllowedOriginPattern("http://10.*.*.*:*");
+        configuration.addAllowedOriginPattern("http://172.*.*.*:*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

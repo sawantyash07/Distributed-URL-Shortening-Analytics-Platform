@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.urlshortener.dto.url.CachedShortUrl;
 import com.urlshortener.exception.UrlGoneException;
+import com.urlshortener.exception.UrlInactiveException;
 import com.urlshortener.util.ClientRequestMetadata;
 import com.urlshortener.util.ClientRequestMetadataResolver;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,8 +37,8 @@ class RedirectServiceTest {
         when(shortUrlService.resolveStatus(cached)).thenReturn(com.urlshortener.model.UrlStatus.INACTIVE);
 
         assertThatThrownBy(() -> redirectService.resolveDestination("abc123", request))
-            .isInstanceOf(UrlGoneException.class)
-            .hasMessage("URL is inactive");
+            .isInstanceOf(UrlInactiveException.class)
+            .hasMessage("URL is inactive. Please activate the session.");
 
         verify(clickAnalyticsService, never()).recordClick(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.any());
     }

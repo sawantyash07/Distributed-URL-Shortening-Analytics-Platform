@@ -2,6 +2,7 @@ package com.urlshortener.service;
 
 import com.urlshortener.dto.url.CachedShortUrl;
 import com.urlshortener.exception.UrlGoneException;
+import com.urlshortener.exception.UrlInactiveException;
 import com.urlshortener.model.UrlStatus;
 import com.urlshortener.util.ClientRequestMetadata;
 import com.urlshortener.util.ClientRequestMetadataResolver;
@@ -23,7 +24,7 @@ public class RedirectService {
         CachedShortUrl cached = shortUrlService.resolveCachedShortUrl(shortCode);
         UrlStatus status = shortUrlService.resolveStatus(cached);
         if (status == UrlStatus.INACTIVE) {
-            throw new UrlGoneException("URL is inactive");
+            throw new UrlInactiveException("URL is inactive. Please activate the session.");
         }
         if (status == UrlStatus.EXPIRED) {
             throw new UrlGoneException("URL has expired");

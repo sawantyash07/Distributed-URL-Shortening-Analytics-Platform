@@ -82,7 +82,7 @@ export default function DashboardPage() {
   const [urls, setUrls] = useState<PagedResponse<ShortUrl> | null>(null)
   const [analytics, setAnalytics] = useState<UrlAnalytics | null>(null)
   const [selectedUrl, setSelectedUrl] = useState<ShortUrl | null>(null)
-  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null)
+  const [qrModalItem, setQrModalItem] = useState<{ qrCodeDataUrl: string; shortUrl: string; shortCode: string; status: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const [savePending, setSavePending] = useState(false)
   const [analyticsLoading, setAnalyticsLoading] = useState(false)
@@ -452,7 +452,7 @@ export default function DashboardPage() {
                           <IconButton onClick={() => copyToClipboard(url.shortUrl)}>
                             <ContentCopyIcon />
                           </IconButton>
-                          <IconButton onClick={() => setQrCodeUrl(url.qrCodeDataUrl)}>
+                          <IconButton onClick={() => setQrModalItem({ qrCodeDataUrl: url.qrCodeDataUrl, shortUrl: url.shortUrl, shortCode: url.shortCode, status: url.status })}>
                             <QrCode2Icon />
                           </IconButton>
                           <IconButton onClick={() => openAnalytics(url)}>
@@ -607,11 +607,52 @@ export default function DashboardPage() {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={Boolean(qrCodeUrl)} onClose={() => setQrCodeUrl(null)}>
-        <DialogTitle>QR code preview</DialogTitle>
+      <Dialog open={Boolean(qrModalItem)} onClose={() => setQrModalItem(null)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ textAlign: 'center' }}>Scannable QR Code</DialogTitle>
         <DialogContent>
-          {qrCodeUrl && <img src={qrCodeUrl} width={280} height={280} alt="QR code" />}
+          {qrModalItem && (
+            <Stack spacing={2} alignItems="center" sx={{ pt: 1 }}>
+              {qrModalItem.status === 'INACTIVE' && (
+                <Alert severity="warning" sx={{ width: '100%', borderRadius: 2 }}>
+                  This URL is <strong>INACTIVE</strong>. Please activate the session to enable redirection.
+                </Alert>
+              )}
+              <Box
+                sx={{
+                  p: 2,
+                  bgcolor: 'common.white',
+                  borderRadius: 2,
+                  boxShadow: 1,
+                  display: 'inline-flex',
+                }}
+              >
+                <img src={qrModalItem.qrCodeDataUrl} width={240} height={240} alt="QR code" />
+              </Box>
+              <Typography variant="body2" textAlign="center" color="text.secondary">
+                Scan with your phone's camera to redirect to:
+                <br />
+                <Typography component="span" variant="subtitle2" color="primary.main" sx={{ wordBreak: 'break-all' }}>
+                  {qrModalItem.shortUrl}
+                </Typography>
+              </Typography>
+            </Stack>
+          )}
         </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 2, gap: 1 }}>
+          {qrModalItem && (
+            <Button
+              variant="outlined"
+              component="a"
+              href={qrModalItem.qrCodeDataUrl}
+              download={`qrcode-${qrModalItem.shortCode}.png`}
+            >
+              Download PNG
+            </Button>
+          )}
+          <Button variant="contained" onClick={() => setQrModalItem(null)}>
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   )
