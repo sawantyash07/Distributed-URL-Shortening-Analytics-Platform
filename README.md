@@ -37,34 +37,6 @@ This system takes that long URL and compresses it into a short, 6-character code
 
 ---
 
-## 🏗️ System Architecture
-
-```mermaid
-flowchart LR
-    subgraph Clients
-        Mobile["📱 Mobile Phone (QR Scan)"]
-        Browser["💻 Desktop Browser / Dashboard"]
-    end
-
-    subgraph Application Stack
-        FE["React 19 Frontend (Vite + Material UI)"]
-        API["Spring Boot 3.5 REST API"]
-    end
-
-    subgraph Infrastructure
-        Redis[("Redis Caching")]
-        DB[("PostgreSQL Database")]
-        Prometheus["Actuator / Prometheus Metrics"]
-    end
-
-    Browser --> FE
-    FE --> API
-    Mobile -->|GET /r/{shortCode}| API
-    API <-->|Cache-Aside Lookup| Redis
-    API <-->|Persist / Load URLs & Analytics| DB
-    API --> Prometheus
-```
-
 ### Redirect Flow Sequence Diagram
 
 ```mermaid
